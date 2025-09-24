@@ -1,0 +1,23 @@
+{
+  "name": "notefy-backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "aws-jwt-verify": "^4.0.0",
+    "aws-sdk": "^2.1514.0",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.21.2",
+    "morgan": "^1.10.1",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}

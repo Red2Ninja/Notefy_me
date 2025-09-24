@@ -1,0 +1,61 @@
+# -------------------- Node / dependencies --------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# -------------------- Build outputs --------------------
+dist/
+build/
+*.tgz
+*.tar.gz
+
+# -------------------- Environment secrets --------------------
+.env
+.env.local
+.env.development
+.env.production
+*.env.backup
+
+# -------------------- AWS credentials & config --------------------
+.aws/
+aws-credentials.json
+~/.aws/credentials
+~/.aws/config
+*.pem
+*.key
+*.pfx
+*.p12
+
+# -------------------- OS / editor junk --------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# -------------------- Logs & debug --------------------
+logs/
+*.log
+*.log.*
+.nyc_output/
+coverage/
+.coverage/
+
+# -------------------- Amplify (if you add it later) --------------------
+amplify/
+amplifyconfiguration.json
+aws-exports.js
+awsconfiguration.json
+src/aws-exports.js
+
+# -------------------- Terraform / CDK (optional) --------------------
+*.tfstate
+*.tfstate.*
+.terraform/
+cdk.out/
