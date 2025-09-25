@@ -11,11 +11,11 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await signOut();
+      //await signOut();
       await signIn({ username: email, password }); // sign-in first
       const { tokens } = await fetchAuthSession(); // ← then grab tokens
       if (!tokens) throw new Error('No tokens returned');
-      const token = tokens.idToken.toString();
+      const token = tokens.accessToken.toString();
       localStorage.setItem('token', token);
       navigate('/dashboard');
     } catch (err) {
