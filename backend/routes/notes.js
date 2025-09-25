@@ -17,7 +17,6 @@ router.post(
     try {
       const file = req.file;
       const userId = req.user.sub;
-
       const s3Key = `${userId}/${Date.now()}_${file.originalname}`;
 
       // Upload to S3
