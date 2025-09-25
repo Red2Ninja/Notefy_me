@@ -11,7 +11,7 @@ router.post("/", authMiddleware, async (req, res) => {
   const { task } = req.body;
   const todo = {
     id: Date.now().toString(),
-    userId: req.user.sub,
+    userid: req.user.sub,
     task,
     completed: false
   };
@@ -35,7 +35,7 @@ router.get("/", authMiddleware, async (req, res) => {
     const data = await dynamoDB
       .scan({ TableName: config.DYNAMO_TABLE_TODOS })
       .promise();
-    res.json(data.Items.filter((t) => t.userId === req.user.sub));
+    res.json(data.Items.filter((t) => t.userid === req.user.sub));
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch todos" });
   }

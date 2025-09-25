@@ -16,8 +16,8 @@ router.post(
   async (req, res) => {
     try {
       const file = req.file;
-      const userId = req.user.sub;
-      const s3Key = `${userId}/${Date.now()}_${file.originalname}`;
+      const userid = req.user.sub;
+      const s3Key = `${userid}/${Date.now()}_${file.originalname}`;
 
       // Upload to S3
       await s3
@@ -31,7 +31,7 @@ router.post(
       // Store metadata in DynamoDB
       const noteItem = {
         id: Date.now().toString(),
-        userId,
+        userid,
         fileName: file.originalname,
         s3Key,
         uploadedAt: new Date().toISOString(),
@@ -58,7 +58,7 @@ router.get("/", authMiddleware, async (req, res) => {
     const data = await dynamoDB
       .query({
         TableName: config.DYNAMO_TABLE_NOTES,
-        KeyConditionExpression: "userId = :u",
+        KeyConditionExpression: "userid = :u",
         ExpressionAttributeValues: { ":u": req.user.sub },
       })
       .promise();
