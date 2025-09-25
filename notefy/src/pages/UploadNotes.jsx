@@ -4,12 +4,22 @@ import API from "../api";
 function UploadNotes() {
   const [file, setFile] = useState(null);
 
-  const handleUpload = (e) => {
+  const handleUpload = async (e) => {
     e.preventDefault();
     if (!file) return alert("Please select a file");
-    console.log("Uploading file:", file.name);
-    // later: send file to backend → S3
-    alert(`File "${file.name}" ready to be uploaded`);
+
+    const form = new FormData();
+    form.append("file", file);
+    try {
+      const { data } = await API.post("/notes/upload", form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      alert("Upload successful: " + data.note.fileName);
+      setFile(null);
+    } catch (err) {
+      console.error(err);
+      alert("Upload failed: " + (err.response?.data?.message || err.message));
+    }
   };
 
   return (
