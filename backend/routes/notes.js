@@ -53,27 +53,52 @@ router.post(
 );
 
 // Get Notes
-router.get("/", authMiddleware, async (req, res) => {
-  try {
-    const data = await dynamoDB
-      .query({
-        TableName: config.DYNAMO_TABLE_NOTES,
-        KeyConditionExpression: "userid = :u",
-        ExpressionAttributeValues: { ":u": req.user.sub },
-      })
-      .promise();
-
-    return res.json(data.Items);
-  } catch (err) {
-    console.error(err);
-    res
-      .status(500)
-      .json({
-        error:
-          "Failed to fetch notes" +
-          (err.response?.data?.message || err.message),
-      });
+// SEARCH + FILTER  (public, no auth required)
+router.get('/search', async (req,res)=>{
+  const { q, course, subject, sort='newest' } = req.query;
+  const params = { TableName: config.DYNAMO_TABLE_NOTES };
+  if(course){
+    params.IndexName = 'courseCode-uploadedAt-index';
+    params.KeyConditionExpression = 'courseCode = :c';
+    params.ExpressionAttributeValues = { ':c': course.toUpperCase() };
+  }else if(q){
+    params.FilterExpression = 'contains(fileName, :q)';
+    params.ExpressionAttributeValues = { ':q': q };
   }
+  if(sort==='newest') params.ScanIndexForward = false;
+  const { Items } = await dynamoDB.scan(params).promise();
+  res.json(Items);
 });
 
+// UPDATE meta (title, course, subject, tags)
+router.patch('/:id', authMiddleware, async (req,res)=>{
+  const { fileName, courseCode, subject, tags } = req.body;
+  const params = {
+    TableName: config.DYNAMO_TABLE_NOTES,
+    Key:{ id:req.params.id, userid:req.user.sub },
+    UpdateExpression:'set fileName=:fn, courseCode=:cc, #s=:s, tags=:t',
+    ExpressionAttributeNames:{'#s':'subject'},
+    ExpressionAttributeValues:{
+      ':fn':fileName, ':cc':courseCode?.toUpperCase(), ':s':subject, ':t':tags
+    },
+    ReturnValues:'ALL_NEW'
+  };
+  const { Attributes } = await dynamoDB.update(params).promise();
+  res.json(Attributes);
+});
+
+// DELETE note + S3 object
+router.delete('/:id', authMiddleware, async (req,res)=>{
+  const { Item } = await dynamoDB.get({
+    TableName: config.DYNAMO_TABLE_NOTES,
+    Key:{ id:req.params.id, userid:req.user.sub }
+  }).promise();
+  if(!Item) return res.status(404).json({error:'Not found'});
+  await s3.deleteObject({ Bucket:config.S3_BUCKET, Key:Item.s3Key }).promise();
+  await dynamoDB.delete({
+    TableName: config.DYNAMO_TABLE_NOTES,
+    Key:{ id:req.params.id, userid:req.user.sub }
+  }).promise();
+  res.json({message:'Deleted'});
+});
 export default router;
