@@ -1,7 +1,7 @@
 // src/pages/Dashboard.jsx
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import NoteCard from "../components/NoteCard.jsx"; // Use .jsx
+import NoteCard from "../components/NoteCard.jsx";
 import API from "../api.js";
 import toast from "react-hot-toast";
 
@@ -12,6 +12,7 @@ function Dashboard() {
   useEffect(() => {
     async function fetchAllNotes() {
       try {
+        setLoading(true);
         // Fetch both sets of notes in parallel
         const [myNotesRes, collabRes] = await Promise.all([
           API.get('/notes/search'), // Your private notes
@@ -40,10 +41,15 @@ function Dashboard() {
   }, []);
 
   return (
-    <div> {/* Padding is now handled by App.css */}
-      <h2 style={{color: '#6e48ff', borderBottom: '1px solid #333', paddingBottom: '1rem'}}>Dashboard</h2>
+    // Padding is now handled by the .content-wrapper class in App.css
+    <div> 
+      <h2 style={{color: '#6e48ff', borderBottom: '1px solid #333', paddingBottom: '1rem'}}>
+        Dashboard
+      </h2>
       
-      <p style={{color: '#aaa'}}>A combined view of your private notes and all public notes from the community.</p>
+      <p style={{color: '#aaa'}}>
+        A combined feed of your private notes and all public notes from the community.
+      </p>
 
       {loading ? (
         <p>Loading notes...</p>

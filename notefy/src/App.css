@@ -9,12 +9,13 @@
 .content-wrapper {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: 4rem 2rem; /* Added top padding */
 }
 
 /* This is for ALL OTHER pages */
 .fullscreen-content-wrapper {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 6rem 2rem 4rem 2rem; /* Added extra top padding for the "Back" button */
+  /* Extra top padding to make room for the hidden nav */
+  padding: 6rem 2rem 4rem 2rem; 
 }

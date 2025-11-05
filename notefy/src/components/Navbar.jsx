@@ -85,7 +85,7 @@ const bar = {
   backdropFilter: 'blur(10px)',
   display: 'flex',
   alignItems: 'center',
-  padding: '2rem 2.4rem'
+  padding: '1.5rem 2.4rem'
 };
 const left = { 
   display: 'flex',

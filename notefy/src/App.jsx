@@ -13,20 +13,19 @@ import UploadNotes from './pages/UploadNotes';
 import TodoList from './pages/TodoList';
 import Repository from './pages/Repository';
 import Tasks from './pages/Tasks';
-import Analytics from './pages/Analytics';
+import Analytics from './pages/Analytics'; // We will import this for the profile page
 import ExamMode from './pages/ExamMode';
-import Profile from './pages/Profile';
-import Collaborate from './pages/Collaborate';
+import Profile from './pages/Profile'; // <-- NEW PAGE
+import Collaborate from './pages/Collaborate'; // <-- Added missing import
 import { Toaster } from 'react-hot-toast';
 import { getValidToken } from './utils/token';
-// import { FiHome } from 'react-icons/fi'; // <-- REMOVED
-import './App.css';
+import './App.css'; // Make sure this is imported
 
-// --- 1. Dashboard Layout (Unchanged) ---
+// --- 1. NEW: Layout for Dashboard (Navbar ALWAYS visible) ---
 function DashboardLayout() {
   return (
     <>
-      <Navbar /> 
+      <Navbar /> {/* The navbar is permanent here */}
       <div className="content-wrapper">
         <Outlet />
       </div>
@@ -35,7 +34,7 @@ function DashboardLayout() {
   );
 }
 
-// --- 2. Fullscreen Layout (LOGIC FIXED) ---
+// --- 2. NEW: Layout for Fullscreen Pages (Navbar Hides) ---
 function FullscreenLayout() {
   const [isNavVisible, setIsNavVisible] = useState(false);
 
@@ -58,7 +57,6 @@ function FullscreenLayout() {
   }, []); // Only runs once
 
   return (
-    // The main div no longer has mouse listeners
     <div style={{ minHeight: '100vh' }}>
       
       {/* The navbar now gets the setIsNavVisible function */}
@@ -68,7 +66,7 @@ function FullscreenLayout() {
         setIsNavVisible={setIsNavVisible} // <-- Pass the setter function
       />
       
-      {/* "Back to Home" button has been REMOVED */}
+      {/* "Back to Home" button has been REMOVED as requested */}
       
       <div className="fullscreen-content-wrapper">
         <Outlet />
@@ -78,7 +76,7 @@ function FullscreenLayout() {
   );
 }
 
-// AuthLayout (Unchanged)
+// --- 3. Simple layout for login/signup (No Navbar) ---
 function AuthLayout() {
   return (
     <>
@@ -88,15 +86,16 @@ function AuthLayout() {
   );
 }
 
+// --- 4. This is your "Gatekeeper" ---
 const Protected = ({ children }) =>
   getValidToken() ? children : <Navigate to="/login" replace />;
 
-// Routes (Unchanged)
+// --- 5. The Final Routes ---
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Auth Routes (Login, Signup) */}
+        {/* Auth Routes (Public) */}
         <Route element={<AuthLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -104,15 +103,16 @@ export default function App() {
           <Route path="/confirm" element={<Confirm />} />
         </Route>
 
-        {/* Dashboard Route (Permanent Navbar) */}
+        {/* Dashboard Route (Protected, Permanent Navbar) */}
         <Route 
           path="/dashboard" 
           element={<Protected><DashboardLayout /></Protected>}
         >
-          <Route index element={<Dashboard />} />
+          {/* This makes Dashboard the default page for this layout */}
+          <Route index element={<Dashboard />} /> 
         </Route>
 
-        {/* Fullscreen App Routes (Hiding Navbar) */}
+        {/* Fullscreen App Routes (Protected, Dynamic Navbar) */}
         <Route element={<Protected><FullscreenLayout /></Protected>}>
           <Route path="/upload" element={<UploadNotes />} />
           <Route path="/note/:id" element={<NoteView />} />
@@ -122,6 +122,7 @@ export default function App() {
           <Route path="/exam" element={<ExamMode />} />
           <Route path="/collab" element={<Collaborate />} />
           <Route path="/profile" element={<Profile />} />
+          {/* This route is so the Profile page can render the Analytics component */}
           <Route path="/analytics" element={<Analytics />} /> 
         </Route>
 
@@ -131,5 +132,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-
-// "Back to Home" style has been REMOVED
