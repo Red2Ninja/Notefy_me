@@ -1,13 +1,11 @@
 // src/components/Navbar.jsx
 import { Link, useNavigate } from 'react-router-dom';
-import { FiUser, FiLogOut, FiBarChart2, FiGrid } from 'react-icons/fi';
+// Added FiUpload
+import { FiUser, FiLogOut, FiBarChart2, FiGrid, FiUpload, FiList, FiUsers, FiCpu } from 'react-icons/fi'; 
 import { signOut } from 'aws-amplify/auth';
 import toast from 'react-hot-toast';
 import './Navbar.css';
 
-// isDynamic: Is this the hiding navbar?
-// isVisible: Is the mouse hovering at the top?
-// setIsNavVisible: The function to hide the nav
 export default function Navbar({ isDynamic = false, isVisible = true, setIsNavVisible }) {
   const nav = useNavigate();
 
@@ -38,7 +36,6 @@ export default function Navbar({ isDynamic = false, isVisible = true, setIsNavVi
     })
   };
 
-  // This function is called when the mouse leaves the navbar area
   const handleMouseLeave = () => {
     if (isDynamic) {
       setIsNavVisible(false);
@@ -46,7 +43,6 @@ export default function Navbar({ isDynamic = false, isVisible = true, setIsNavVi
   };
 
   return (
-    // The onMouseLeave handler is added here
     <header style={barStyle} onMouseLeave={handleMouseLeave}>
       <div style={left}>
         <Link to="/dashboard" style={logoStyle}>Notefy</Link>
@@ -54,10 +50,12 @@ export default function Navbar({ isDynamic = false, isVisible = true, setIsNavVi
       
       <nav style={navLinks}>
         <Link to="/dashboard" style={linkStyle}><FiGrid /> Dashboard</Link>
-        <Link to="/repository" style={linkStyle}>Repository</Link>
+        {/* --- UPLOAD LINK IS NOW HERE --- */}
+        <Link to="/upload" style={linkStyle}><FiUpload /> Upload</Link>
+        <Link to="/repository" style={linkStyle}><FiList /> Repository</Link>
         <Link to="/tasks" style={linkStyle}>Tasks</Link>
-        <Link to="/collab" style={linkStyle}>Collaborate</Link>
-        <Link to="/exam" style={linkStyle}>Exam Mode</Link>
+        <Link to="/collab" style={linkStyle}><FiUsers /> Collaborate</Link>
+        <Link to="/exam" style={linkStyle}><FiCpu /> Exam Mode</Link>
       </nav>
       
       <div style={right}>
@@ -85,7 +83,7 @@ const bar = {
   backdropFilter: 'blur(10px)',
   display: 'flex',
   alignItems: 'center',
-  padding: '1.5rem 2.4rem'
+  padding: '1.2rem 2.4rem'
 };
 const left = { 
   display: 'flex',
