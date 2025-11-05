@@ -1,16 +1,45 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f6f8fa;
+  background: #1a1a1a; /* Dark background from PDF */
+  color: rgba(255, 255, 255, 0.87); /* Light text */
 }
-input, button {
+
+h1, h2, h3, h4, h5, h6 {
+  color: #ffffff;
+}
+
+a {
+  color: #6e48ff; /* Purple link color */
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+input, 
+input[type="text"],
+input[type="password"],
+input[type="email"] {
   margin: 0.5rem 0;
-  padding: 0.5rem;
+  padding: 0.6em 1.2em;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #555;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
+
 button {
-  background: #0a1628;
+  background: #6e48ff; /* Purple from PDF */
   color: #fff;
   border: none;
   cursor: pointer;
+  margin: 0.5rem 0;
+  padding: 0.6em 1.2em;
+  border-radius: 4px;
+  font-weight: 500;
 }
-button:hover { opacity: 0.8; }
+button:hover { 
+  opacity: 0.8; 
+}

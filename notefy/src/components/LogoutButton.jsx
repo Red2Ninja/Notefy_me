@@ -9,8 +9,20 @@ export default function LogoutButton() {
     nav("/", { replace: true });
   };
   return (
-    <button onClick={logout} style={{ marginLeft: "auto", color: "#fff" }}>
+    <button onClick={logout} style={buttonStyle}>
       Logout
     </button>
   );
 }
+
+// Style to match the purple theme button
+const buttonStyle = {
+  background: "#6e48ff",
+  color: "#fff",
+  border: "none",
+  cursor: "pointer",
+  padding: "0.6em 1.2em",
+  borderRadius: "4px",
+  fontWeight: 500,
+  marginLeft: "auto",
+};
