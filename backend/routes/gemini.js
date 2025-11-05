@@ -10,30 +10,37 @@ const ai = new GoogleGenAI({
 });
 
 router.post('/generate-quiz', authMiddleware, async (req, res) => {
-  const { notesText } = req.body; // notesText comes directly from the ExamMode component
+  // --- THIS IS THE CHANGE ---
+  const { topic } = req.body; // We now expect a 'topic' string (the file names)
+  // --- END OF CHANGE ---
 
   if (!process.env.GEMINI_API_KEY) {
       return res.status(500).json({ error: "Gemini API key is missing on the server." });
   }
 
-  if (!notesText || notesText.length < 100) {
-    return res.status(400).json({ error: "Insufficient text provided for quiz generation. Minimum 100 characters required." });
+  // --- THIS IS THE CHANGE ---
+  if (!topic || topic.length < 5) {
+    return res.status(400).json({ error: "Insufficient topic information provided." });
   }
+  // --- END OF CHANGE ---
 
+  // --- THIS IS THE NEW PROMPT ---
   const prompt = `
-    Based on the following study material, generate a quiz of 10 multiple-choice questions (MCQs) 
+    Based on the following topic(s), which are titles of study notes, 
+    generate a challenging quiz of 10 multiple-choice questions (MCQs) 
     that a university student could use to prepare for an exam. 
     
     Format the response as a single JSON array named 'quiz', where each object has 
     'question', 'options' (an array of 4 choices), and 'correctAnswer' (the index of the correct choice, starting at 0).
     
-    STUDY MATERIAL:
+    TOPIC(S):
     ---
-    ${notesText}
+    ${topic}
     ---
     
     Ensure the response contains ONLY the valid JSON array.
   `;
+  // --- END OF NEW PROMPT ---
 
   try {
     const response = await ai.models.generateContent({
